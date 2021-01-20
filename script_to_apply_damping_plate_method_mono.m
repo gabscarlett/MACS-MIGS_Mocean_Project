@@ -14,21 +14,25 @@ dataSetName = 'S120_Fwd_A30';
 dataPath = 'C:\Users\Gabriel\OneDrive - Mocean Energy LTD\MACS-MIGS\ProjectData\experimental campaigns\2019\combined_monochromatic_data\'; % change this to your path
 load([dataPath dataSetName '.mat']) % open the data
 
-%% inspect the experimental data
+%% experimental data description
 
 % inspect the experimental data
-force_experiment = opt.ExForces; % forces: dimension (wave frequency x DOF)
-phase_experiment = opt.ExPhases; % phases: dimension (wave frequency x DOF)
+
+% force_experiment;  forces: dimension (wave frequency x DOF)
+% phase_experiment; phases: dimension (wave frequency x DOF)
+
 % surge force: DOF = 1
 % heave force: DOF = 2
 % pitch moment: DOF = 3
-T = opt.T; % wave periods
-H = opt.H; % water depth
 
-%% inspect the simulation data (from WAMIT)
-CompU = opt.CompU{1}; % undamped wave channel hydrodynamic computation
-Comp = opt.Comp{1}; % wave channel computation with damping plate
-CompP = opt.CompP{1}; % damping plate computation with wave channel
+% T = opt.T; wave periods
+% H = opt.H; water depth
+
+%% simulation data (from WAMIT) description
+
+% CompU;  undamped wave channel hydrodynamic computation
+% Comp;   wave channel computation with damping plate
+% Comp;   damping plate computation with wave channel
 
 % NOTE: these are objects of FreqDomComp classes. Our mwave repository is required to work with these
 % https://github.com/cmcnatt/mwave
@@ -38,14 +42,14 @@ Fex = squeeze(CompU.Fex);
 force_modelled = abs(Fex); % magnitude of forces
 phase_modelled = angle(Fex); % phase of forces from wave peak
         
- %% apply the damping plate method
+ %% apply the damping plate method: try changing the coefficient
  
  % use ViscDampCoef class to dimensionalise old damping coeff
  coef = ViscDampCoef;
  
  coef.Cd = 2;                       % non-dimensional damping coeff magnitude
  coef.Rho = 1000;                   % fluid density
- coef.A = opt.WidHull*opt.RadChan;  % wave channel area
+ coef.A = WidHull*RadChan;  % wave channel area
  x0m = coef.GetDimCd('linear'); 
  x0p = 70/180*pi;                   % non-dimensional damping coeff phase
  

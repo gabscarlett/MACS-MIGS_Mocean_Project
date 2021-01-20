@@ -18,19 +18,23 @@ for j =1:2 % loop over each wave direction
             dataSetName = [steepness{k} '_' direction{j} '_A' num2str(phi(n))]; % set containing experimental and numerical data
             load([dataPath dataSetName '.mat']) % open the data
             
-            % inspect the experimental data
-            force_experiment = opt.ExForces; % forces: dimension (wave frequency x DOF)
-            phase_experiment = opt.ExPhases; % phases: dimension (wave frequency x DOF)
+            % description of the experimental data
+            
+            % force_experiment;         forces: dimension (wave frequency x DOF)
+            % phase_experiment;         phases: dimension (wave frequency x DOF)
+            
             % surge force: DOF = 1
             % heave force: DOF = 2
             % pitch moment: DOF = 3
-            T = opt.T; % wave periods
-            H = opt.H; % water depth
             
-            % inspect the simulation data (from WAMIT)
-            CompU = opt.CompU{1};   % undamped wave channel hydrodynamic computation
-            Comp = opt.Comp{1};     % wave channel computation with damping plate
-            CompP = opt.CompP{1};   % damping plate computation with wave channel
+            % T; % wave periods
+            % H; % water depth
+            
+            % description of the simulation data (from WAMIT)
+            
+            CompU;    % undamped wave channel hydrodynamic computation
+            Comp;     % wave channel computation with damping plate
+            CompP;    % damping plate computation with wave channel
             
             % NOTE: these are objects of (FreqDomComp) classes. Our mwave repository is required to work with these
             % https://github.com/cmcnatt/mwave
