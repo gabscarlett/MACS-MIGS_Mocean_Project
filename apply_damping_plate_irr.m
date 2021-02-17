@@ -1,4 +1,4 @@
-% apply damping to irregular wave S1, Fwd, A30
+% apply damping to irregular wave S2, Fwd, A30
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; close all; clc
@@ -14,8 +14,8 @@ myCell=cell(18,1); % cell to hold plot labels
 j=0;
 
 k = 1; % forward direction
-m = 1; %:length(Tp)
-n=2; %:length(phi)
+m = 2; %:length(Tp)
+n=1; %:length(phi)
        
 %inspect
 
@@ -67,7 +67,8 @@ myCell{n+j} = ['TS' num2str(m) ' ' num2str(phi(n)) char(176) ];
 load([modelledDataPath dataSetName '_modelled']);
             
 % get the undamped forces
-FexU = squeeze(CompU.Fex);            
+FexU = squeeze(CompU.Fex); 
+force_modelled=abs(FexU);
 % make synthetic wave spectrum
 spectra = Bretschneider(Hs(m), Tp(m), T0); % wave spectrum
 A = spectra.Amplitudes; % amplitude spectum
@@ -86,7 +87,7 @@ FexMod(n+j,:,:) = FD;
 
 coef = ViscDampCoef;
  
-coef.Cd =0.77;                %validation paper                     % non-dimensional damp
+coef.Cd =0;                %validation paper                     % non-dimensional damp
 coef.Rho = 1000;              % fluid density
  
 RadChan = 0.318;              %mono data
@@ -101,6 +102,7 @@ WidHull = 0.201;
 
 % compute damped forces
 FexD = waveChanDamping(Comp, CompP, cdPlate);
+force_damped=abs(FexD);
  
 %make power spectral density (index D for damping)           
 Fs_D = flip(FexD.*A'); % force amplitude spectum
@@ -112,14 +114,16 @@ FexMod_D(n+j,:,:) = FD_D;
 % pitch moment: DOF = 5
 
 %plot all
-%plot(F0,FexExp(1,:,3),'r',F0,FexMod(1,:,5),'b',F0,FexMod_D(1,:,5),'y','linewidth',1.5)
+plot(F0,FexMod(1,:,5),'b',F0,FexMod_D(1,:,5),'r','linewidth',1.5)
+title('PSD(FexD) and PSD(FexU) for S2')
+
+%plot(F0,force_damped(:,5),'b',F0,force_modelled(:,5),'r','linewidth',1.5)
+%title('FexD and FexU for S2')
+
 
 %plot exp and damped
-plot(F0,FexExp(2,:,3),'r',F0,FexMod_D(2,:,5),'b','linewidth',1.5)
-legend('Experimental', 'damped')
+%plot(F0,FexExp(2,:,3),'r',F0,FexMod_D(2,:,5),'b','linewidth',1.5)
+%legend('Experimental', 'damped')
 
 %plot difference between damped and undamped case
 %plot (F0, (FexMod(1,:,5)-FexMod_D(1,:,5))/max(FexMod(1,:,5)))
-
-
-
